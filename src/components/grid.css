@@ -1,0 +1,9 @@
+Button {
+    width: 2px !important;
+    padding-left: 0 !important;
+}
+
+.container {
+    margin: 8px;
+    border: 5px;
+}
