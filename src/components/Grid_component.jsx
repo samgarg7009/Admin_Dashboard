@@ -23,10 +23,19 @@ function GridComponent() {
             })
     }, []);
 
+
+    const handleDelete =(target) => {
+        console.log('delete');
+        setRowData(rowData.filter((_,id)=>id !== target))
+    }
+    const handleEdit = () => {
+        console.log('delete')
+    }
+
     const ActionButton = (props) =>
         <Stack direction="row" spacing={2}>
-            <Button variant="outlined" startIcon={<DeleteIcon />}></Button>
-            <Button variant="outlined" startIcon={<BorderColorOutlinedIcon />}></Button>
+            <Button variant="outlined" startIcon={<DeleteIcon />} onClick={()=>handleDelete(props.id)}></Button>
+            <Button variant="outlined" startIcon={<BorderColorOutlinedIcon />} onClick={handleEdit}></Button>
         </Stack>;
 
     const [colDefs, setColDefs] = useState([
