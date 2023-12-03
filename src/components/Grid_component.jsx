@@ -1,4 +1,4 @@
-import React, { useRef, useState, useMemo } from "react";
+import React, { useMemo } from "react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
@@ -34,12 +34,13 @@ const ActionButton = (params) => {
 
 function GridComponent(props) {
 
-    const { data, gridRef, onGridDataUpdate } = props;
+    const { data, gridRef, onRowDelete, onRowUpdate } = props;
 
-    const [colDefs, setColDefs] = useState([
+    const colDefs =[
         {
             field: 'name',
             headerCheckboxSelection: true,
+            headerCheckboxSelectionCurrentPageOnly: true,
             checkboxSelection: true
         },
         { field: 'email' },
@@ -51,7 +52,7 @@ function GridComponent(props) {
             cellRenderer: ActionButton,
             colId: 'action'
         }
-    ]);
+    ];
 
     const defaultColDef = useMemo(() => ({
         flex: 1,
@@ -76,10 +77,12 @@ function GridComponent(props) {
                 params.api.applyTransaction({
                     remove: [params.node.data]
                 });
+                onRowDelete(params.node.data);
             }
 
             if (action === "update") {
                 params.api.stopEditing(false);
+                onRowUpdate(params.node.data);
             }
 
             if (action === "cancel") {

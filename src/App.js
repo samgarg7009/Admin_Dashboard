@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
-import Copy from "./components/Copy";
+import React, { useEffect, useRef, useState } from "react";
 import GridComponent from "./components/Grid_component";
 import SearchBar from "./components/Search";
 import IconButton from "@mui/material/IconButton";
@@ -8,7 +7,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 function App() {
   const [data, setData] = useState();
   const [gridData, setGridData] = useState();
-  const [enableDelete, setEnableDelete] = useState(false);
+  // const [enableDelete, setEnableDelete] = useState(false);
   const gridRef = useRef();
 
   useEffect(() => {
@@ -27,11 +26,12 @@ function App() {
 
   const onSearchClick = (searchText) => {
     console.log("search clicked", searchText);
+    searchText = searchText.toLowerCase();
     const filteredData = data.filter((row) => {
       if (
-        row.name.includes(searchText) ||
-        row.email.includes(searchText) ||
-        row.role.includes(searchText)
+        row.name.toLowerCase().includes(searchText) ||
+        row.email.toLowerCase().includes(searchText) ||
+        row.role.toLowerCase().includes(searchText)
       ) {
         return true;
       }
@@ -45,8 +45,20 @@ function App() {
     gridRef.current.api.applyTransaction({ remove: selectedRowData });
   };
 
-  const onGridDataUpdate = (data) => {
-    setData(data);
+  const onRowDelete = (rowData) => {
+    const updatedData = data.filter((row) => row.id !== rowData.id);
+    setData(updatedData);
+  };
+
+  const onRowUpdate = (rowData) => {
+    const updatedData = data.map((row) => {
+      if (row.id === rowData.id) {
+        return rowData;
+      } else {
+        return row;
+      }
+    });
+    setData(updatedData);
   };
 
   return (
@@ -69,9 +81,9 @@ function App() {
       <GridComponent
         gridRef={gridRef}
         data={gridData}
-        onGridDataUpdate={onGridDataUpdate}
+        onRowDelete={onRowDelete}
+        onRowUpdate={onRowUpdate}
       />
-      {/* <Copy/> */}
     </div>
   );
 }
